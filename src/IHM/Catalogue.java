@@ -118,7 +118,7 @@ public class Catalogue extends JPanel{
 		return this.imfond;
 	}
 
-	private JButton getjLabel3() {
+	public JButton getjLabel3() {
 		if (this.btnson == null) {
 			this.btnson = new JButton(new SoundAction(cadre));
 			btnson.setHorizontalAlignment(SwingConstants.CENTER);
