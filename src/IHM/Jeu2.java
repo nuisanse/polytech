@@ -3,6 +3,8 @@ package IHM;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -12,9 +14,7 @@ import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
-import model.Chronometre;
 import model.MessagePopupAccueil;
-import model.NextJPanelAction;
 import model.SoundAction;
 import view.PrincipalCadre;
 
@@ -30,44 +30,151 @@ public class Jeu2 extends JPanel{
 	private JButton btnson = null;
 	private JLabel imbulle = null;
 	private JButton btnabandonner = null;
+	private JLabel titrepanel = null;
 	private JTextPane txtinstruction = null;
 	private JLabel bandeau = null;
-	private String Prenom = "";
+	private String Prenom = "papiJeu2";
 	private JPanel panelbandeau = null;
-	//private Chronometre chrono = null;
-	private JLabel time = null;
-	private String langue = null;
-	private String theme = null;
-	private String difficulte = null;
-	private Thread thread = null;
 	
+	private boolean gg = true;
+	private boolean continuer = true;
+	/* Il faut remplir ces variables */
+	private int difficulte = 0;
+	private String theme = "Nourriture";
+	private String langue = "Allemand";
 
 	public Jeu2(PrincipalCadre frame)
 	{
 		super();
 		this.cadre=frame;
 		setJContentPane1();
+		run();
 	}
+/* Voici le jeu:
+ * On crée une classe carte contenant l'image de la carte et son nom et on implemente une methode test d'egalité
+ * On crée un 3 ArrayList par theme de carte dans PrincipaleCadre contenant toutes les cartes du jeu
+ * Selon la difficulté, on crée un tableau de taille "difficulté
+ * on tire aléatoirement des indices et on rempli le tableau à partir de l'arraylist de principale cadre selon le theme choisi
+ * on affiche ce tableau et on fait une copie anonyme du tableau
+ * pour chaque carte on affiche la carte et un mot
+ * 
+ * après une minute, on tire aleatoirement des indices, on forme un nouveau arraylist
+ * et on affiche les images correspondantes de cet array liste.
+ * on affiche les noms de ces images dans la langue chosis de façon desordonné
+ * le joueur fait son choix, qu'on enregistre dans un nouveau arraylist
+ * on teste si l'egalité entre l'arraylist du joueur et du dernier arraylist sont correcte
+ * si oui le joueur a gagné sinon non
+ * on lui demande s'il veut rejouer
+ **/
 
-
+	private void run()
+	{	
+		Random r = new Random();
+		ArrayList<Integer> nbrTiree = new ArrayList<Integer>();
+		ArrayList<Carte> listedetheme = new ArrayList<Carte>(cadre.listeTheme(this.theme));
+		ArrayList<String> listedemot = new ArrayList<String>(cadre.listeDico(this.langue));
+		int valeur = 0;
+		ArrayList<Carte> listeCartes = new ArrayList<Carte>();
+		for(int i = 0; i < this.difficulte; i++)
+		{
+			/* Tirer aleatoirement un nombre entre 0 et 11*/
+			while(nbrTiree.contains(valeur))
+			{
+				valeur = r.nextInt(11);
+			}
+			nbrTiree.add(valeur);
+			listeCartes.add(listedetheme.get(valeur));
+		}
+		
+		/* Implementation d'un bouton commencer qui quand on appuis deçu start devient true et on sort de la boucle */
+		// affichage du tableau listeCartes pendant 1 minutes
+		try {
+			Thread.sleep(60000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		/* On fait disparaitre les mots et les cartes */
+		
+		String[] reponses = new String[4];
+		
+		/* On affiche sequentiellement les cartes */
+		for(int i = 0; i < this.difficulte; i++)
+		{
+			// Affichage de listeCartes.get(i).imgano
+			valeur = r.nextInt(3);
+			nbrTiree.clear();
+			for(int j = 0; j < 4; j++)
+			{
+				int valeur2 = r.nextInt(11);
+				while(nbrTiree.contains(valeur2)) // a debuger
+				{
+					valeur2 = r.nextInt(11);
+				}
+				nbrTiree.add(valeur2);
+				if(j == valeur)
+					reponses[valeur] = new String(listeCartes.get(i).toString(this.langue));
+				else
+				{
+					reponses[j] = listedemot.get(valeur2);
+				}
+			}
+			
+			/* Creation de bouton radio groupé a partir de listedemot */
+			/* Affichage du bouton ok */
+			/* On associe au bouton ok l'action de mettre continuer a false */
+			while(continuer)
+			{
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			continuer = true;			
+		}
+		
+		/* On tire aléatoirement des positions pour les cartes */
+		listeCartes.clear();
+		nbrTiree.clear();
+		for(int i = 0; i < this.difficulte; i++)
+		{
+			/* Tirer aleatoirement un nombre entre 0 et 8*/
+			while(nbrTiree.contains(valeur))
+			{
+				valeur = r.nextInt(8);
+			}
+			nbrTiree.add(valeur);
+			listeCartes.add(listedetheme.get(valeur));
+		}
+		
+		// On affiche les images des cartes séparemement avec leur nom et on demande au joueur de choisir
+		// On stock le choix du joueur dans ce tableau grace au bouton radio ou nimporte:
+		ArrayList<Carte> choixJoueur = new ArrayList<Carte>();
+		// Merci de gerer ça aussi
+		
+		/* On compare le choix du joueur avec le tableau affiché */
+		for(int i = 0; i < this.difficulte; i++)
+		{
+			if(!choixJoueur.get(i).egale(listeCartes.get(i),this.langue))
+			{
+				gg = false;
+				break;
+			}
+		}
+		
+		/* si gg = false le joueur a perdu sinon il a gagné */
+		
+	}
+	
+	
 	private void setJContentPane1()
 	{
 		this.setBounds(0,0,1150,600);
 		this.setName("Menu");
 		this.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setBounds(626, 42, 89, 25);
-		//add(lblNewLabel);
-		
-		JButton btnNewButton = new JButton(new NextJPanelAction(this,this.cadre.getJeu3()));
-		btnNewButton.setText("NEXT");
-		btnNewButton.setBounds(657, 359, 89, 23);
-		add(btnNewButton);
-		
-		//this.add(getchrono(),null);
 		this.add(getPanel(),null);
-		this.add(gettime(),null);
+		this.add(gettitremenu(),null);
 		this.add(gettxtpnPourUnePremiere(),null);
 		this.add(getbouton1(),null);
 		this.add(getjLabel3(),null);
@@ -76,33 +183,12 @@ public class Jeu2 extends JPanel{
 		this.add(getjLabel1(),null);
 		
 	}
-/*La m�thode nextInt() de la classe Random permet de g�n�rer un entier al�atoire compris
- * entre 0 inclus et l'entier pass� en param�tre exclus. En ajoutant 1 et en enlevant le minimum
- * dans l'entier en param�tre, puis en ajoutant le nombre minimum au r�sultat, on arrive � obtenir
- * un nombre al�atoire compris entre les deux valeurs:
+/*La m�thode nextInt() de la classe Random permet de g�n�rer un entier al�atoire compris
+ * entre 0 inclus et l'entier pass� en param�tre exclus. En ajoutant 1 et en enlevant le minimum
+ * dans l'entier en param�tre, puis en ajoutant le nombre minimum au r�sultat, on arrive � obtenir
+ * un nombre al�atoire compris entre les deux valeurs:
 Random rand = new Random();
 int nombreAleatoire = rand.nextInt(max - min + 1) + min;*/
-	
-	
-	/*public Chronometre getchrono() throws InterruptedException{
-		if (chrono==null){
-			chrono=new Chronometre(this.cadre,this,this.cadre.getJeu3());
-		}
-		return chrono;
-	}*/
-	
-	
-	public void affichechrono() throws InterruptedException{
-		int i;
-		thread = new Thread();
-		for (i=60;i>=0;i--)
-		{
-			Thread.sleep(1000);
-			this.cadre.getJeu2().settime("Temps restant : "+Integer.toString(i)+"s");
-		}
-		this.cadre.getJeu2().setVisible(false);
-		this.cadre.getJeu3().setVisible(true);
-	}
 	
 
 	private JPanel getPanel() {
@@ -128,22 +214,6 @@ int nombreAleatoire = rand.nextInt(max - min + 1) + min;*/
 		return this.bandeau;
 	}
 	
-	public JLabel gettime(){
-		if (this.time==null){
-			time= new JLabel("CHRONO");
-			time.setBounds(626, 42, 500, 100);
-			time.setHorizontalAlignment(SwingConstants.CENTER);
-			time.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
-			time.setBackground(Color.WHITE);
-			time.setVisible(false);
-		}
-		return this.time;
-	}
-	
-	public void settime(String s){
-		this.time.setText(s);
-	}
-	
 	private JButton getbouton1(){
 		if (this.btnabandonner == null){
 			this.btnabandonner = new JButton(new MessagePopupAccueil(this,this.cadre,"Veux-tu vraiment abandonner la partie et retourner au menu principal ?","Abandon de la partie"));
@@ -154,6 +224,18 @@ int nombreAleatoire = rand.nextInt(max - min + 1) + min;*/
 		}
 		return this.btnabandonner;
 	}
+
+	private JLabel gettitremenu(){
+		if (this.titrepanel == null){
+			this.titrepanel = new JLabel();
+			titrepanel.setBounds(515,21,81,57);
+			titrepanel.setForeground(Color.BLACK);
+			titrepanel.setFont(new Font("Comic Sans MS", Font.PLAIN, 40));
+			titrepanel.setHorizontalAlignment(SwingConstants.TRAILING);
+			titrepanel.setText("JEU");
+		}
+		return this.titrepanel;
+	}		
 
 	private JTextPane gettxtpnPourUnePremiere() {
 		if (this.txtinstruction == null) {
@@ -190,7 +272,7 @@ int nombreAleatoire = rand.nextInt(max - min + 1) + min;*/
 		return this.imoiseau;
 	}
 
-	public JButton getjLabel3() {
+	private JButton getjLabel3() {
 		if (this.btnson == null) {
 			this.btnson = new JButton(new SoundAction(cadre));
 			btnson.setHorizontalAlignment(SwingConstants.CENTER);
@@ -221,35 +303,5 @@ int nombreAleatoire = rand.nextInt(max - min + 1) + min;*/
 
 	public void setPrenom(String prenom) {
 		Prenom = prenom;
-	}
-
-
-	public String getLangue() {
-		return langue;
-	}
-
-
-	public void setLangue(String langue) {
-		this.langue = langue;
-	}
-
-
-	public String getTheme() {
-		return theme;
-	}
-
-
-	public void setTheme(String theme) {
-		this.theme = theme;
-	}
-
-
-	public String getDifficulte() {
-		return difficulte;
-	}
-
-
-	public void setDifficulte(String difficulte) {
-		this.difficulte = difficulte;
 	}
 }
