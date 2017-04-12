@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import model.ConfigAction;
-import model.NextJPanelActionMenu;
+import model.MessagePopupAccueil;
 import model.SoundAction;
 import view.PrincipalCadre;
 
@@ -282,7 +282,7 @@ public class Jeu extends JPanel
 	
 	private JButton getbouton1(){
 		if (this.btnaccueil == null) {
-			this.btnaccueil = new JButton(new NextJPanelActionMenu(this,this.cadre));
+			this.btnaccueil = new JButton(new MessagePopupAccueil(this,this.cadre,"Veux-tu vraiment retourner au menu principal ?","Retour au menu principal"));
 			btnaccueil.setText("ACCUEIL");
 			btnaccueil.setBounds(953, 526, 164, 45);
 			btnaccueil.setBackground(new Color(255, 0, 0));
@@ -303,7 +303,7 @@ public class Jeu extends JPanel
 		return this.imfond;
 	}
 
-	public JButton getjLabel3() {
+	private JButton getjLabel3() {
 		if (this.btnson == null) {
 			this.btnson = new JButton(new SoundAction(cadre));
 			btnson.setBounds(1008, 21, 70, 57);

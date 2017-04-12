@@ -186,7 +186,7 @@ public class FinJeu extends JPanel{
 		return this.imbulle;
 	}
 
-	public JButton getjLabel3() {
+	private JButton getjLabel3() {
 		if (this.btnson == null) {
 			this.btnson = new JButton(new SoundAction(cadre));
 			btnson.setHorizontalAlignment(SwingConstants.CENTER);

@@ -64,8 +64,8 @@ public class Menu extends JPanel
 		this.add(getbouton4(),null);
 
 		this.add(getsoundButton(),null);
-		this.add(getjLabel2(),null);
 		this.add(getjLabel4(),null);
+		this.add(getjLabel2(),null);
 		this.add(getjLabel1(),null);
 	}
 
@@ -183,7 +183,7 @@ public class Menu extends JPanel
 		return this.imbulle;
 	}
 
-	public JButton getsoundButton() {
+	private JButton getsoundButton() {
 		if (this.btnson == null) {
 			this.btnson = new JButton(new SoundAction(cadre));
 			btnson.setHorizontalAlignment(SwingConstants.CENTER);

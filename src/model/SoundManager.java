@@ -6,7 +6,7 @@ public class SoundManager {
 
 	private static SoundManager __instance;
 	private Musiquefond zik;
-	private static boolean mute;
+	public static boolean mute;
 
 
 	public static SoundManager getInstance() {
