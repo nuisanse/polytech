@@ -13,6 +13,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 
 import model.MessagePopupAccueil;
 import model.SoundAction;
@@ -30,9 +31,11 @@ public class Jeu3 extends JPanel {
 	private JButton btnson = null;
 	private JLabel imbulle = null;
 	private JButton btnabandonner = null;
-	private JLabel titrepanel = null;
 	private JTextPane txtinstruction = null;
 	private int configuration=0;
+	private JPanel panelbandeau = null;
+	private JLabel bandeau = null;
+	private String Prenom = "";
 
 
 	public Jeu3(PrincipalCadre frame)
@@ -48,6 +51,7 @@ public class Jeu3 extends JPanel {
 		this.setBounds(0,0,1150,600);
 		this.setName("Menu");
 		this.setLayout(null);
+		
 
 		JList list = new JList();
 		list.setInheritsPopupMenu(true);
@@ -72,42 +76,51 @@ public class Jeu3 extends JPanel {
 		dtrpnCartes.setFont(new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 12));
 		dtrpnCartes.setBackground(Color.LIGHT_GRAY);
 		dtrpnCartes.setForeground(Color.RED);
-		dtrpnCartes.setText("                 CARTE 1/3");
 		dtrpnCartes.setBounds(858, 149, 251, 214);
 		add(dtrpnCartes);
-
-		this.add(gettitremenu(),null);
+		
+		this.add(getPanel(),null);
 		this.add(gettxtpnPourUnePremiere(),null);
 		this.add(getbouton1(),null);
 		this.add(getjLabel3(),null);
-		this.add(getjLabel4(),null);
 		this.add(getjLabel2(),null);
+		this.add(getjLabel4(),null);
 		this.add(getjLabel1(),null);
 	}
 
-
+	private JPanel getPanel() {
+		if (panelbandeau == null) {
+			panelbandeau = new JPanel();
+			panelbandeau.setBackground(new Color(255, 204, 204));
+			panelbandeau.setBorder(new LineBorder(new Color(102, 0, 0), 2));
+			panelbandeau.setBounds(0, 0, 434, 67);
+			panelbandeau.setLayout(null);
+			panelbandeau.add(getbandeau());
+		}
+		return panelbandeau;
+	}
+	
+	public JLabel getbandeau(){
+		if (this.bandeau == null){
+			this.bandeau = new JLabel();
+			bandeau.setBounds(0, 0, 434, 67);
+			bandeau.setHorizontalAlignment(SwingConstants.CENTER);
+			bandeau.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+			bandeau.setBackground(Color.WHITE);
+		}
+		return this.bandeau;
+	}
+	
 	private JButton getbouton1(){
 		if (this.btnabandonner == null){
 			this.btnabandonner = new JButton(new MessagePopupAccueil(this,this.cadre,"Veux-tu vraiment abandonner la partie et retourner au menu principal ?","Abandon de la partie"));
 			btnabandonner.setText("ABANDONNER");
-			btnabandonner.setBounds(894, 526, 215, 45);
+			btnabandonner.setBounds(890, 526, 227, 45);
 			btnabandonner.setBackground(new Color(255, 0, 0));
 			btnabandonner.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
 		}
 		return this.btnabandonner;
 	}
-
-	private JLabel gettitremenu(){
-		if (this.titrepanel == null){
-			this.titrepanel = new JLabel();
-			titrepanel.setBounds(515,21,81,57);
-			titrepanel.setForeground(Color.BLACK);
-			titrepanel.setFont(new Font("Comic Sans MS", Font.PLAIN, 40));
-			titrepanel.setHorizontalAlignment(SwingConstants.TRAILING);
-			titrepanel.setText("JEU");
-		}
-		return this.titrepanel;
-	}		
 
 	private JTextPane gettxtpnPourUnePremiere() {
 		if (this.txtinstruction == null) {
@@ -115,7 +128,7 @@ public class Jeu3 extends JPanel {
 			txtinstruction.setEditable(false);
 			txtinstruction.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
 			txtinstruction.setText("Clique sur le nom qui correspond \u00E0 la carte ");
-			txtinstruction.setBounds(98, 122, 221, 76);
+			txtinstruction.setBounds(165, 203, 221, 76);
 		}
 		return this.txtinstruction;
 	}
@@ -135,7 +148,7 @@ public class Jeu3 extends JPanel {
 		if (this.imoiseau == null) {
 			this.imoiseau = new JLabel();
 			imoiseau.setHorizontalAlignment(SwingConstants.CENTER);
-			imoiseau.setBounds(-34, 218, 308, 262);
+			imoiseau.setBounds(20, 290, 308, 262);
 			imoiseau.setName("image_oiseau");
 			imoiseau.setText(null);
 			imoiseau.setIcon(new ImageIcon(getClass().getClassLoader().getResource(BASE_IMG_URI + "oiseau.png")));
@@ -143,7 +156,7 @@ public class Jeu3 extends JPanel {
 		return this.imoiseau;
 	}
 
-	private JButton getjLabel3() {
+	public JButton getjLabel3() {
 		if (this.btnson == null) {
 			this.btnson = new JButton(new SoundAction(cadre));
 			btnson.setHorizontalAlignment(SwingConstants.CENTER);
@@ -159,7 +172,7 @@ public class Jeu3 extends JPanel {
 		if (this.imbulle == null) {
 			this.imbulle = new JLabel();
 			imbulle.setHorizontalAlignment(SwingConstants.CENTER);
-			imbulle.setBounds(0, 38, 399, 282);
+			imbulle.setBounds(66, 122, 399, 282);
 			imbulle.setName("image_bulle");
 			imbulle.setText(null);
 			imbulle.setIcon(new ImageIcon(getClass().getClassLoader().getResource(BASE_IMG_URI + "bulle.png")));
@@ -167,14 +180,20 @@ public class Jeu3 extends JPanel {
 		return this.imbulle;
 	}
 
-
 	public int getConfiguration() {
 		return configuration;
 	}
 
-
 	public void setConfiguration(int configuration) {
 		this.configuration = configuration;
+	}
+	
+	public String getPrenom() {
+		return Prenom;
+	}
+
+	public void setPrenom(String prenom) {
+		Prenom = prenom;
 	}
 }
 

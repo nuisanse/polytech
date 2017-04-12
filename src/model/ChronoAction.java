@@ -23,14 +23,13 @@ public class ChronoAction extends AbstractAction{
 	}
 	
 	public void logic(){
-		//while ()
 		setTime(getTime() + 1);
 		lb.setText(""+time);
 	}
 	
 	public void actionPerformed(ActionEvent e){
 		logic();
-		//repaint();
+		this.cadre.repaint();
 	}
 
 	public int getTime() {
